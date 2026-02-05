@@ -48,7 +48,9 @@ def run_organize(args) -> None:
 
 
 def run_manifest(args) -> None:
-    print("MANIFEST: not implemented yet")
+    from dataset_tool.core.manifest import generate_manifest
+
+    generate_manifest(Path(args.input_dir), Path(args.output_file))
 
 
 def main() -> None:
@@ -77,6 +79,8 @@ def main() -> None:
 
     # ---- manifest ----
     manifest_parser = subparsers.add_parser("manifest", help="Generate manifest")
+    manifest_parser.add_argument("input_dir", help="Input dataset folder")
+    manifest_parser.add_argument("output_file", help="Output JSON file")
     manifest_parser.set_defaults(func=run_manifest)
 
     args = parser.parse_args()
