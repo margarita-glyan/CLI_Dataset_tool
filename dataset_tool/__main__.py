@@ -58,9 +58,13 @@ def main() -> None:
         prog="dataset-tool",
         description="Dataset organizer and analyzer for images and text",
     )
-
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Enable debug logging",
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
-
+    
     # ---- scan ----
     scan_parser = subparsers.add_parser("scan", help="Scan dataset folder")
     scan_parser.add_argument("path", help="Path to dataset folder")
@@ -84,7 +88,12 @@ def main() -> None:
     manifest_parser.set_defaults(func=run_manifest)
 
     args = parser.parse_args()
+
+    from dataset_tool.core.logger import setup_logger
+    setup_logger(args.verbose)
+
     args.func(args)
+
 
 
 if __name__ == "__main__":
