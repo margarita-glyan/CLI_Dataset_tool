@@ -28,10 +28,25 @@ def run_scan(args) -> None:
 
     print(f"❓ Unknown: {len(result.unknown)}")
 
-    if result.errors:
-        print("\n⚠ Errors:")
-        for err in result.errors:
-            print("  -", err)
+    # ✅ Duplicate Detection inside scan
+    if args.dupes:
+        print("\n🔍 Duplicate Detection")
+        print("=" * 30)
+
+        from dataset_tool.core.duplicates import find_duplicates
+
+        all_files = result.images + result.texts
+        dupes = find_duplicates(all_files)
+
+        if not dupes:
+            print("No duplicates found ✅")
+        else:
+            print(f"Found {len(dupes)} duplicate groups:\n")
+            for h, files in dupes.items():
+                print(f"Hash: {h[:10]}...")
+                for f in files:
+                    print("  -", f.path.name)
+                print()
 
     print("\n✅ Scan complete\n")
 
@@ -55,6 +70,14 @@ def main() -> None:
     # --- scan ---
     scan_parser = subparsers.add_parser("scan", help="Scan dataset folder")
     scan_parser.add_argument("path", help="Path to dataset folder")
+
+    # ✅ flag must be added AFTER scan_parser exists
+    scan_parser.add_argument(
+        "--dupes",
+        action="store_true",
+        help="Detect duplicate files using SHA256",
+    )
+
     scan_parser.set_defaults(func=run_scan)
 
     # --- organize ---
