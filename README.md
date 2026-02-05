@@ -82,3 +82,5 @@ dataset-tool --verbose scan <path>
 ```bash
 pytest
 ```
+![CI](https://github.com/margarita-glyan/CLI_Dataset_tool/actions/workflows/ci.yml/badge.svg)
+
